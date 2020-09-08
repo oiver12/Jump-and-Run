@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class PlayerMovement : MonoBehaviour
 {
+	public int jumpTime = 0;
+	public float angleThreshold = 40f;
+	public float jumpForce;
+	public float fallMultiplier = 2.5f;
+	public float lowJumpMultiplier = 2f;
+
+	bool isgrounded;
 	BoxCollider2D boxCollider2D;
 	Rigidbody2D rig;
 	Animator animator;
-	public float jumpForce;
-	bool isgrounded;
-	public int jumpTime = 0;
-	public float angleThreshold = 40f;
 
 	private void Start()
 	{
@@ -44,6 +48,18 @@ public class PlayerMovement : MonoBehaviour
 			jumpTime++;
 			rig.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
 		}
+
+		if (rig.velocity.y < 0)
+			rig.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+		else if (rig.velocity.y > 0 && !(Input.GetMouseButton(0) | Input.GetKeyDown(KeyCode.Space)))
+			rig.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
+
+		//if(Input.touchCount == 1 && Input.touches[0].phase == TouchPhase.Began && isgrounded || Input.touchCount == 1 && Input.touches[0].phase == TouchPhase.Began && jumpTime < 2)
+		//{
+		//	Debug.Log("Jetzt");
+		//	jumpTime++;
+		//	rig.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+		//}
 	}
 
 	public bool getIsGrounded()
@@ -74,7 +90,7 @@ public class PlayerMovement : MonoBehaviour
 	public void Dead()
 	{
 		//rig.velocity = new Vector2(0)
-		MovementTiles.instance.speed = 0f;
+		rig.velocity = new Vector2(-MovementTiles.speed, 0f);
 		animator.SetBool("isDead", true);
 	}
 
