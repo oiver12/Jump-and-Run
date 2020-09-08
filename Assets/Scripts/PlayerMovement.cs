@@ -20,7 +20,7 @@ public class PlayerMovement : MonoBehaviour
 	}
 
 	// Update is called once per frame
-	void Update()
+	private void FixedUpdate()
     {
 		bool wasgrounded = isgrounded;
 		isgrounded = getIsGrounded();
@@ -29,7 +29,7 @@ public class PlayerMovement : MonoBehaviour
 			Debug.Log("Jetzt");
 			animator.SetBool("isJumping", !isgrounded);
 		}
-		if (Input.GetMouseButtonDown(0) && isgrounded)
+		if (Input.GetMouseButtonDown(0) && isgrounded || Input.GetKeyDown(KeyCode.Space) && isgrounded)
 		{
 			rig.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
 		}
