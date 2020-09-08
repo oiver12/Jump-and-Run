@@ -4,7 +4,13 @@ using UnityEngine;
 
 public class MovementTiles : MonoBehaviour
 {
+	public static MovementTiles instance;
 	public float speed;
+
+	private void Awake()
+	{
+		instance = this;
+	}
 
 	private void Update()
 	{
