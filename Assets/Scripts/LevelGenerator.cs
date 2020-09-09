@@ -15,28 +15,32 @@ public class LevelGenerator : MonoBehaviour
 	//eine statische Instanz, weil es nur ein Level Genrator gibt
 	public static LevelGenerator instance;
 	//alle Tiles, welche im Inspector angegen werden
-	public List<GameObject> platformPrefab;
+	//public List<GameObject> platformPrefab;
 	//alle Teile, welche nicht sichtbar sind und somit noch platziert werden können, weil sie verfügbar sind
-	List<GameObject> notVisibelTilesInScene = new List<GameObject>();
+	//List<GameObject> notVisibelTilesInScene = new List<GameObject>();
 	//alle Tiles welche gerade sichtbar 
 	List<GameObject> activeTiles = new List<GameObject>();
-	public Transform parentObject;
 	public Vector2 endPos;
 
 	private void Start()
 	{
 		instance = this;
-		for (int i = 0; i < platformPrefab.Count; i++)
-		{
-			for (int y = 0; y < 5; y++)
-			{
-				GameObject go = Instantiate(platformPrefab[i]);
-				go.SetActive(false);
-				notVisibelTilesInScene.Add(go);
-			}
-		}
+		////setzte von jedem Object mehrere Tiles und mache sie nicht sichtbar um danach diese setzten zu können
+		//for (int i = 0; i < platformPrefab.Count; i++)
+		//{
+		//	for (int y = 0; y < 5; y++)
+		//	{
+		//		//setzte alle und mache sie nicht sichtbar
+		//		GameObject go = Instantiate(platformPrefab[i]);
+		//		go.SetActive(false);
+		//		notVisibelTilesInScene.Add(go);
+		//	}
+		//}
+		//setzte das erste Teil auf 0, 0
 		endPos = Vector2.zero;
+		//setzte ein Teil
 		SpawnTile();
+
 		//float width = platformPrefab[0].GetComponent<SpriteRenderer>().bounds.size.x;
 		//Debug.Log(width);
 		//endPos = Vector2.zero;
@@ -60,21 +64,25 @@ public class LevelGenerator : MonoBehaviour
 	{
 		GameObject lastObject = activeTiles[0];
 		activeTiles.RemoveAt(0);
-		lastObject.SetActive(false);
-		notVisibelTilesInScene.Add(lastObject);
+		LevelTiles.instance.DeactivateTile(lastObject);
+		//lastObject.SetActive(false);
+		//notVisibelTilesInScene.Add(lastObject);
 	}
 
 	void SpawnTile()
 	{
-		int tile = Random.Range(0, notVisibelTilesInScene.Count-1);
-		float width;
-		GameObject spawnedGameObject = notVisibelTilesInScene[tile];
-		notVisibelTilesInScene.RemoveAt(tile);
+		//int tile = Random.Range(0, notVisibelTilesInScene.Count-1);
+		//float width;
+		//GameObject spawnedGameObject = notVisibelTilesInScene[tile];
+		//notVisibelTilesInScene.RemoveAt(tile);
+		GameObject spawnedGameObject = LevelTiles.instance.GetTile();
 		spawnedGameObject.SetActive(true);
+		float width;
 		if (activeTiles.Count > 0)
 		{
 			endPos = activeTiles[activeTiles.Count - 1].transform.GetChild(1).position; //endPositionObject
-			width = activeTiles[activeTiles.Count - 1].transform.GetChild(1).position.x - activeTiles[activeTiles.Count - 1].transform.GetChild(0).position.x;
+			//width = activeTiles[activeTiles.Count - 1].transform.GetChild(1).position.x - activeTiles[activeTiles.Count - 1].transform.GetChild(0).position.x;
+			width = spawnedGameObject.transform.GetChild(1).position.x - spawnedGameObject.transform.GetChild(0).position.x;
 		}
 		else
 			width = spawnedGameObject.GetComponent<SpriteRenderer>().bounds.size.x;

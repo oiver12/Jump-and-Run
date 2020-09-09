@@ -27,14 +27,13 @@ public class GameManager : MonoBehaviour
 
 	private void Update()
 	{
-		//Debug.Log(Time.time);
-		Debug.Log(10f + (10 * (int)schoolNow));
-		scrollbar.size = Time.time / (10f + (10f * (int)schoolNow));
+		scrollbar.size = Time.time / (15f + (15f * (int)schoolNow));
 
-		if (Time.time >= 10f + (10f * (int)schoolNow))
+		if (Time.time >= 15f + (15f * (int)schoolNow))
 		{
 			schoolNow++;
 			textField.text = schoolNow.ToString();
+			LevelTiles.instance.NewLevel();
 		}
 	}
 }

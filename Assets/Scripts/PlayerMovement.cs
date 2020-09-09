@@ -1,16 +1,16 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 //regeln des Player Movements 
 public class PlayerMovement : MonoBehaviour
 {
-	public int jumpTime = 0;
 	public float angleThreshold = 40f;
 	public float jumpForce;
 	public float fallMultiplier = 2.5f;
 	public float lowJumpMultiplier = 2f;
 
+	//wie viel mal sind wir gesprungen
+	int jumpCounter = 0;
 	bool isgrounded;
 	BoxCollider2D boxCollider2D;
 	Rigidbody2D rig;
@@ -18,7 +18,7 @@ public class PlayerMovement : MonoBehaviour
 
 	private void Start()
 	{
-		//bekommen von Rigedbody
+		//bekommen von Rigidbody
 		rig = GetComponent<Rigidbody2D>();
 		boxCollider2D = GetComponent<BoxCollider2D>();
 		animator = transform.GetChild(0).GetComponent<Animator>();
@@ -34,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
 		if (wasgrounded != isgrounded)
 		{
 			if (isgrounded)
-				jumpTime = 0;
+				jumpCounter = 0;
 
 			if(!isgrounded)
 				animator.SetBool("isJumping", false);
@@ -46,14 +46,12 @@ public class PlayerMovement : MonoBehaviour
 			if (isgrounded)
 			{
 				animator.SetBool("isJumping", true);
-				jumpTime++;
-				rig.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+				Jump();
 			}
-			else if(jumpTime < 2)
+			else if(jumpCounter < 2)
 			{
 				//mid air jump
-				jumpTime++;
-				rig.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+				Jump();
 			}
 		}
 
@@ -62,13 +60,13 @@ public class PlayerMovement : MonoBehaviour
 			if (isgrounded)
 			{
 				animator.SetBool("isJumping", true);
-				jumpTime++;
-				rig.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+				Jump();
+				
 			}
-			else if(jumpTime < 2)
+			else if(jumpCounter < 2)
 			{
-				jumpTime++;
-				rig.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+				StartCoroutine(doubleJump());
+				Jump();
 			}
 		}
 
@@ -80,6 +78,14 @@ public class PlayerMovement : MonoBehaviour
 		else if (rig.velocity.y > 0 && !(Input.GetMouseButton(0) | Input.GetKeyDown(KeyCode.Space)))
 			//weniger schnell nach oben
 			rig.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
+	}
+
+	//wenn wir einen Mid Air Jump machen, dann müssen wir 0.5 Sekunden warten bevor wir wieder doubleJump auf false setzten, damit der Character nicht die ganze Zeit einen double Jump ausführt
+	IEnumerator doubleJump()
+	{
+		animator.SetBool("doubleJump", true);
+		yield return new WaitForSeconds(0.5f);
+		animator.SetBool("doubleJump", false);
 	}
 
 	/// <summary>
@@ -100,7 +106,7 @@ public class PlayerMovement : MonoBehaviour
 		//ist es ein Obstacle --> layer 9
 		if (collision.gameObject.layer == 9)
 		{
-			Debug.Log(Vector2.Angle((Vector2)transform.position - collision.contacts[0].point, Vector2.up));
+			//Debug.Log(Vector2.Angle((Vector2)transform.position - collision.contacts[0].point, Vector2.up));
 			//den Winkel zum aufrechten Winkel ausrechen und wenn der Winkel unter 40 ist, dann kommen wir von oben
 			if (Mathf.Abs(Vector2.Angle((Vector2)transform.position - collision.contacts[0].point, Vector2.up)) < angleThreshold)
 				Destroy(collision.gameObject);
@@ -111,7 +117,7 @@ public class PlayerMovement : MonoBehaviour
 		//ist der Boden --> layer 8
 		if(collision.gameObject.layer == 8)
 		{
-			Debug.Log(Vector2.Angle((Vector2)transform.position - collision.contacts[0].point, Vector2.up));
+			//Debug.Log(Vector2.Angle((Vector2)transform.position - collision.contacts[0].point, Vector2.up));
 			//wenn wir von der Seite kommen, sterben wir
 			if (Mathf.Abs(Vector2.Angle((Vector2)transform.position - collision.contacts[0].point, Vector2.up)) > angleThreshold)
 				Dead();
@@ -125,6 +131,16 @@ public class PlayerMovement : MonoBehaviour
 	{
 		rig.velocity = new Vector2(-MovementTiles.speed, 0f);
 		animator.SetBool("isDead", true);
+	}
+
+	//springe nach oben
+	void Jump()
+	{
+		//jumpTimer plus 1, um nur zwei mal zu springen
+		jumpCounter++;
+		//rig.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+		//die geschwindigkeit des Characters nach oben setzten
+		rig.velocity = new Vector2(0f, jumpForce);
 	}
 }
 
