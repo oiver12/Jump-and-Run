@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3144968103349255677}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -22.5, y: -0.25, z: 19.42352}
+  m_LocalPosition: {x: -22.2, y: -0.25, z: 19.42352}
   m_LocalScale: {x: 1.44409, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 5729132917339410177}
@@ -40,10 +40,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5729132917339410177}
   - component: {fileID: 8051931454991795575}
-  - component: {fileID: 3337193344933115190}
-  - component: {fileID: -8640566643603253071}
+  - component: {fileID: 1751241750446223294}
+  - component: {fileID: 2000532172868271871}
   m_Layer: 8
-  m_Name: BasicTile
+  m_Name: BasicTile 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -116,7 +116,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &3337193344933115190
+--- !u!61 &1751241750446223294
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -142,7 +142,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 44.263226, y: 1.3399999}
   m_EdgeRadius: 0
---- !u!114 &-8640566643603253071
+--- !u!114 &2000532172868271871
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -178,7 +178,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7058378617332077346}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 24.4, y: 2.14, z: 19.42352}
+  m_LocalPosition: {x: 24.4, y: -1.57, z: 19.42352}
   m_LocalScale: {x: 1.44409, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 5729132917339410177}
