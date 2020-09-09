@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
+//regeln des Player Movements 
 public class PlayerMovement : MonoBehaviour
 {
 	public int jumpTime = 0;
@@ -28,7 +28,6 @@ public class PlayerMovement : MonoBehaviour
 	// Update is called once per frame
 	private void Update()
     {
-		animator.SetBool("isDoubleJump", false);
 		bool wasgrounded = isgrounded;
 		isgrounded = getIsGrounded();
 		//wenn man im letzten Frame nicht am Boden war, aber jetzt schon, ist man jetzt gerade gelandet
@@ -42,68 +41,90 @@ public class PlayerMovement : MonoBehaviour
 
 			animator.SetBool("isGrounded", isgrounded);
 		}
-		if (Input.GetMouseButtonDown(0) && isgrounded || Input.GetMouseButtonDown(0) && jumpTime < 2)
+		if (Input.GetMouseButtonDown(0))
 		{
-			animator.SetBool("isJumping", true);
-			jumpTime++;
-			rig.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+			if (isgrounded)
+			{
+				animator.SetBool("isJumping", true);
+				jumpTime++;
+				rig.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+			}
+			else if(jumpTime < 2)
+			{
+				//mid air jump
+				jumpTime++;
+				rig.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+			}
 		}
 
-		if (Input.GetKeyDown(KeyCode.Space) && isgrounded || Input.GetKeyDown(KeyCode.Space) && jumpTime < 2)
+		if (Input.GetKeyDown(KeyCode.Space))
 		{
-			jumpTime++;
-			rig.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+			if (isgrounded)
+			{
+				animator.SetBool("isJumping", true);
+				jumpTime++;
+				rig.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+			}
+			else if(jumpTime < 2)
+			{
+				jumpTime++;
+				rig.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+			}
 		}
 
+		//gehen wir runter --> y ist minus
 		if (rig.velocity.y < 0)
+			//schenller fallen mit einem fallMultiplier
 			rig.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+		//gehen wir rauf und sind nicht gerade gesprungen
 		else if (rig.velocity.y > 0 && !(Input.GetMouseButton(0) | Input.GetKeyDown(KeyCode.Space)))
+			//weniger schnell nach oben
 			rig.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
-
-		//if(Input.touchCount == 1 && Input.touches[0].phase == TouchPhase.Began && isgrounded || Input.touchCount == 1 && Input.touches[0].phase == TouchPhase.Began && jumpTime < 2)
-		//{
-		//	Debug.Log("Jetzt");
-		//	jumpTime++;
-		//	rig.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
-		//}
 	}
 
+	/// <summary>
+	/// sind wir auf dem Boden
+	/// </summary>
 	public bool getIsGrounded()
 	{
-		RaycastHit2D hit = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0f, Vector2.down, 0.5f, 1 << 8);
+		//checken mit einer Box ob man auf dem Boden ist
+		RaycastHit2D hit = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0f, Vector2.down, 0.2f, 1 << 8);
 		return hit.collider != null;
 	}
 
+	//wenn man in eine Object hineingelaufen ist
 	void OnCollisionEnter2D(Collision2D collision)
 	{
-		//obstacle
+		//was ist es für ein Object
+
+		//ist es ein Obstacle --> layer 9
 		if (collision.gameObject.layer == 9)
 		{
 			Debug.Log(Vector2.Angle((Vector2)transform.position - collision.contacts[0].point, Vector2.up));
+			//den Winkel zum aufrechten Winkel ausrechen und wenn der Winkel unter 40 ist, dann kommen wir von oben
 			if (Mathf.Abs(Vector2.Angle((Vector2)transform.position - collision.contacts[0].point, Vector2.up)) < angleThreshold)
 				Destroy(collision.gameObject);
+			//wenn wir von der Seite kommen, dann sterben wir
 			else
 				Dead();
 		}
+		//ist der Boden --> layer 8
 		if(collision.gameObject.layer == 8)
 		{
 			Debug.Log(Vector2.Angle((Vector2)transform.position - collision.contacts[0].point, Vector2.up));
+			//wenn wir von der Seite kommen, sterben wir
 			if (Mathf.Abs(Vector2.Angle((Vector2)transform.position - collision.contacts[0].point, Vector2.up)) > angleThreshold)
 				Dead();
 		}
 	}
 
+	/// <summary>
+	/// wir sind gestorben
+	/// </summary>
 	public void Dead()
 	{
-		//rig.velocity = new Vector2(0)
 		rig.velocity = new Vector2(-MovementTiles.speed, 0f);
 		animator.SetBool("isDead", true);
-	}
-
-	void Jump()
-	{
-		rig.velocity = new Vector2(rig.velocity.x, 0);
-		rig.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 	}
 }
 

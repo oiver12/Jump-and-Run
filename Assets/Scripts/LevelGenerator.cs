@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+//generieren von endless Tiles
 public class LevelGenerator : MonoBehaviour
 {
 	//public bool calc = true;
@@ -11,9 +12,13 @@ public class LevelGenerator : MonoBehaviour
 	//public float maxJumpTime;
 
 	//Vector2 vel;
+	//eine statische Instanz, weil es nur ein Level Genrator gibt
 	public static LevelGenerator instance;
+	//alle Tiles, welche im Inspector angegen werden
 	public List<GameObject> platformPrefab;
+	//alle Teile, welche nicht sichtbar sind und somit noch platziert werden können, weil sie verfügbar sind
 	List<GameObject> notVisibelTilesInScene = new List<GameObject>();
+	//alle Tiles welche gerade sichtbar 
 	List<GameObject> activeTiles = new List<GameObject>();
 	public Transform parentObject;
 	public Vector2 endPos;
