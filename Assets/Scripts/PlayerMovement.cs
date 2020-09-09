@@ -28,17 +28,23 @@ public class PlayerMovement : MonoBehaviour
 	// Update is called once per frame
 	private void Update()
     {
+		animator.SetBool("isDoubleJump", false);
 		bool wasgrounded = isgrounded;
 		isgrounded = getIsGrounded();
+		//wenn man im letzten Frame nicht am Boden war, aber jetzt schon, ist man jetzt gerade gelandet
 		if (wasgrounded != isgrounded)
 		{
 			if (isgrounded)
 				jumpTime = 0;
 
-			animator.SetBool("isJumping", !isgrounded);
+			if(!isgrounded)
+				animator.SetBool("isJumping", false);
+
+			animator.SetBool("isGrounded", isgrounded);
 		}
 		if (Input.GetMouseButtonDown(0) && isgrounded || Input.GetMouseButtonDown(0) && jumpTime < 2)
 		{
+			animator.SetBool("isJumping", true);
 			jumpTime++;
 			rig.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
 		}
@@ -64,7 +70,7 @@ public class PlayerMovement : MonoBehaviour
 
 	public bool getIsGrounded()
 	{
-		RaycastHit2D hit = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0f, Vector2.down, 0.3f, 1 << 8);
+		RaycastHit2D hit = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0f, Vector2.down, 0.5f, 1 << 8);
 		return hit.collider != null;
 	}
 
