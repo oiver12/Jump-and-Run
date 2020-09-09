@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81a0669a621cbf74697ec4c23fc89839, type: 3}
+  m_Name: Sekundar
+  m_EditorClassIdentifier: 
+  levelName: Sekundar
+  levelIndex: 1
+  maxLevelScore: 30
+  spawnableTiles:
+  - {fileID: 1332964324738484687, guid: 54ee3ec464133204a8f6d3af1954d99e, type: 3}
+  - {fileID: 1332964324738484687, guid: be7cfd8ed1a61f245b084f1b9956b15d, type: 3}

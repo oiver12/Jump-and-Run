@@ -2,22 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class SpawnTilesInLevel
-{
-	public List<GameObject> tilesFromLevel;
-}
+//[System.Serializable]
+//public class SpawnTilesInLevel
+//{
+//	public List<GameObject> tilesFromLevel;
+//}
 
 public class LevelTiles : MonoBehaviour
 {
-	public List<SpawnTilesInLevel> allTiles;
+	public List<GameObject[]> allTiles;
 	Dictionary<int, List<GameObject>> allActiveTiles = new Dictionary<int, List<GameObject>>();
 	Transform parentInactiveObject;
 	Transform parentActiveObject;
 	int levelNow = -1;
 	public static LevelTiles instance;
 
-	private void Start()
+	public void Inizialize()
 	{
 		instance = this;
 		parentActiveObject = new GameObject("ActiveObject").transform;
@@ -30,7 +30,7 @@ public class LevelTiles : MonoBehaviour
 		List<GameObject> tiles = allActiveTiles[randTileIndex];
 		if(tiles.Count == 0)
 		{
-			GameObject go = Instantiate(allTiles[levelNow].tilesFromLevel[randTileIndex], parentActiveObject);
+			GameObject go = Instantiate(allTiles[levelNow][randTileIndex], parentActiveObject);
 			go.name = randTileIndex.ToString();
 			return go;
 		}
@@ -60,11 +60,12 @@ public class LevelTiles : MonoBehaviour
 
 	public void NewLevel()
 	{
+		Debug.Log(allTiles.Count);
 		levelNow++;
 		if(parentInactiveObject != null)
 			Destroy(parentInactiveObject.gameObject);
 		allActiveTiles.Clear();
-		for (int i = 0; i < allTiles[levelNow].tilesFromLevel.Count; i++)
+		for (int i = 0; i < allTiles[levelNow].Length; i++)
 		{
 			allActiveTiles.Add(i, new List<GameObject>());
 		}

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81a0669a621cbf74697ec4c23fc89839, type: 3}
+  m_Name: Primar
+  m_EditorClassIdentifier: 
+  levelName: Primar
+  levelIndex: 0
+  maxLevelScore: 15
+  spawnableTiles:
+  - {fileID: 6670199770361699140, guid: 54ce7d9a119b31646be80c9a258c225f, type: 3}
+  - {fileID: 6670199770361699140, guid: 95ba4ee134c093a4a8c7601e59593e75, type: 3}

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 //regeln des Player Movements 
 public class PlayerMovement : MonoBehaviour
@@ -8,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
 	public float jumpForce;
 	public float fallMultiplier = 2.5f;
 	public float lowJumpMultiplier = 2f;
+	public bool gamePause = false;
 
 	//wie viel mal sind wir gesprungen
 	int jumpCounter = 0;
@@ -28,6 +30,9 @@ public class PlayerMovement : MonoBehaviour
 	// Update is called once per frame
 	private void Update()
     {
+		if (gamePause)
+			return;
+
 		bool wasgrounded = isgrounded;
 		isgrounded = getIsGrounded();
 		//wenn man im letzten Frame nicht am Boden war, aber jetzt schon, ist man jetzt gerade gelandet
@@ -41,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
 
 			animator.SetBool("isGrounded", isgrounded);
 		}
-		if (Input.GetMouseButtonDown(0))
+		if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
 		{
 			if (isgrounded)
 			{
@@ -129,7 +134,7 @@ public class PlayerMovement : MonoBehaviour
 	/// </summary>
 	public void Dead()
 	{
-		rig.velocity = new Vector2(-MovementTiles.speed, 0f);
+		MovementTiles.speed = 0f;
 		animator.SetBool("isDead", true);
 	}
 

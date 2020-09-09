@@ -20,7 +20,7 @@ public class LevelGenerator : MonoBehaviour
 	//List<GameObject> notVisibelTilesInScene = new List<GameObject>();
 	//alle Tiles welche gerade sichtbar 
 	List<GameObject> activeTiles = new List<GameObject>();
-	public Vector2 endPos;
+	Vector2 endPos;
 
 	private void Start()
 	{
@@ -71,6 +71,7 @@ public class LevelGenerator : MonoBehaviour
 
 	void SpawnTile()
 	{
+		GameManager.instance.NextTilePlaced();
 		//int tile = Random.Range(0, notVisibelTilesInScene.Count-1);
 		//float width;
 		//GameObject spawnedGameObject = notVisibelTilesInScene[tile];
