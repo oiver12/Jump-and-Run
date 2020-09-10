@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 81a0669a621cbf74697ec4c23fc89839, type: 3}
-  m_Name: Primar
+  m_Name: Primarschule
   m_EditorClassIdentifier: 
-  levelName: Primar
+  levelName: Primarschule
   levelIndex: 0
   levelTime: 15
   spawnableTiles:

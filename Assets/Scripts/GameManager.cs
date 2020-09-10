@@ -2,18 +2,11 @@
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
-
-//public enum Schools
-//{
-//	Kindergarten = 0,
-//	Primar = 1, 
-//	Sekundar = 2,
-//	Gym = 3,
-//	Univerität = 4
-//}
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
+	public string[] alleNoten;
 	public Levels[] allLevels;
 	public static GameManager instance;
 	Levels levelNow;
@@ -25,12 +18,15 @@ public class GameManager : MonoBehaviour
 	public TextMeshProUGUI nextScoreField;
 	public TextMeshProUGUI scoreDeadTextField;
 	public TextMeshProUGUI highScoreTextField;
+	public TextMeshProUGUI noteTextField;
 	float timeInLastLevel;
 	float timeSinceStartTheGame = 0f;
 	float scoreNow;
+	int noteNow;
 
 	private void Start()
 	{
+		noteNow = alleNoten.Length - 1;
 		LevelTiles levelTiles = GetComponent<LevelTiles>();
 		levelTiles.allTiles = new List<GameObject[]>();
 		for (int i = 0; i < allLevels.Length; i++)
@@ -43,10 +39,13 @@ public class GameManager : MonoBehaviour
 		textField.text = levelNow.name;
 		nextScoreField.text = levelNow.levelTime.ToString();
 		levelTiles.Inizialize();
+		StartCoroutine(reduceTtroopDamageOvertime());
+		noteTextField.text = alleNoten[noteNow];
 	}
 
 	private void InternalRestart()
 	{
+		noteNow = alleNoten.Length - 1;
 		levelIndexNow = 0;
 		playerSpeed = 3f;
 		LevelTiles levelTiles = GetComponent<LevelTiles>();
@@ -58,11 +57,14 @@ public class GameManager : MonoBehaviour
 		instance = this;
 		levelNow = allLevels[0];
 		MovementTiles.speed = playerSpeed;
-		textField.text = levelNow.name;
+		textField.text = levelNow.levelName;
 		nextScoreField.text = levelNow.levelTime.ToString();
 		levelTiles.Inizialize();
 		timeInLastLevel = 0f;
 		timeSinceStartTheGame = Time.time;
+		noteTextField.text = alleNoten[noteNow];
+		StartCoroutine(reduceTtroopDamageOvertime());
+		noteTextField.text = alleNoten[noteNow];
 	}
 
 	private void Update()
@@ -76,14 +78,25 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
+	public void ReduceNote()
+	{
+		noteNow--;
+		if (noteNow < 0f)
+			Die();
+		else
+			noteTextField.text = alleNoten[noteNow];
+	}
+
 	void NextLevel()
 	{
+		noteNow = alleNoten.Length - 1;
 		levelIndexNow++;
 		levelNow = allLevels[levelIndexNow];
-		textField.text = levelNow.name;
+		textField.text = levelNow.levelName;
 		LevelTiles.instance.NewLevel();
 		nextScoreField.text = levelNow.levelTime.ToString();
 		timeInLastLevel = Time.time;
+		noteTextField.text = alleNoten[noteNow];
 	}
 
 	public void Restart()
@@ -116,11 +129,15 @@ public class GameManager : MonoBehaviour
 		UIManager.instance.Die();
 	}
 
-	//public void NextTilePlaced(float width, GameObject nextTilePlace)
-	//{
-	//	nextTile = nextTilePlace.transform;
-	//	widthNextTile = width;
-	//	tilesPlaced++;
-	//	scoreField.text = tilesPlaced + "/";
-	//}
+	IEnumerator reduceTtroopDamageOvertime()
+	{
+		yield return new WaitForSeconds(0.4f);
+		while(true)
+		{
+			float secondsToWait = levelNow.levelTime / (alleNoten.Length - 1);
+			Debug.Log(secondsToWait);
+			yield return new WaitForSeconds(secondsToWait);
+			ReduceNote();
+		}
+	}
 }

@@ -41,6 +41,7 @@ public class UIManager : MonoBehaviour
 		player.gamePause = false;
 		inGameUI.SetActive(true);
 		pauseMenu.SetActive(false);
+		dieMenu.SetActive(false);
 		MovementTiles.speed = 3f;
 	}
 

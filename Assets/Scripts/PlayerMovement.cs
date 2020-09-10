@@ -53,6 +53,7 @@ public class PlayerMovement : MonoBehaviour
 
 			animator.SetBool("isGrounded", isgrounded);
 		}
+		Debug.Log(jumpCounter);
 		if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
 		{
 			if (isgrounded)
@@ -63,6 +64,7 @@ public class PlayerMovement : MonoBehaviour
 			else if(jumpCounter < 2)
 			{
 				//mid air jump
+				StartCoroutine(doubleJump());
 				Jump();
 			}
 		}
@@ -77,6 +79,7 @@ public class PlayerMovement : MonoBehaviour
 			}
 			else if(jumpCounter < 2)
 			{
+				Debug.Log("ok");
 				StartCoroutine(doubleJump());
 				Jump();
 			}
@@ -90,6 +93,12 @@ public class PlayerMovement : MonoBehaviour
 		else if (rig.velocity.y > 0 && !(Input.GetMouseButton(0) | Input.GetKeyDown(KeyCode.Space)))
 			//weniger schnell nach oben
 			rig.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
+
+		if (Input.GetKey(KeyCode.A) && Input.GetKeyDown(KeyCode.F))
+		{
+			ScreenCapture.CaptureScreenshot(Application.dataPath + "/Screenshoot.png");
+			Debug.Log(Application.dataPath);
+		}
 	}
 
 	//wenn wir einen Mid Air Jump machen, dann müssen wir 0.5 Sekunden warten bevor wir wieder doubleJump auf false setzten, damit der Character nicht die ganze Zeit einen double Jump ausführt
