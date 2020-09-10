@@ -21,6 +21,7 @@ public class LevelGenerator : MonoBehaviour
 	//alle Tiles welche gerade sichtbar 
 	List<GameObject> activeTiles = new List<GameObject>();
 	Vector2 endPos;
+	public float xSpawnPosition = -20f;
 
 	private void Start()
 	{
@@ -51,9 +52,16 @@ public class LevelGenerator : MonoBehaviour
 		//}
 	}
 
+	public void Restart()
+	{
+		activeTiles = new List<GameObject>();
+		endPos = Vector2.zero;
+		SpawnTile();
+	}
+
 	private void Update()
 	{
-		if(activeTiles[0].transform.position.x <= -20f)
+		if(activeTiles[0].transform.position.x <= xSpawnPosition)
 			DestroyLastObject();
 
 		if (activeTiles[activeTiles.Count - 1].transform.position.x <= 10f)
@@ -71,7 +79,6 @@ public class LevelGenerator : MonoBehaviour
 
 	void SpawnTile()
 	{
-		GameManager.instance.NextTilePlaced();
 		//int tile = Random.Range(0, notVisibelTilesInScene.Count-1);
 		//float width;
 		//GameObject spawnedGameObject = notVisibelTilesInScene[tile];
@@ -90,6 +97,7 @@ public class LevelGenerator : MonoBehaviour
 
 		spawnedGameObject.transform.position = new Vector2(endPos.x + (width / 2), endPos.y);
 		activeTiles.Add(spawnedGameObject);
+		//GameManager.instance.NextTilePlaced(width, spawnedGameObject);
 	}
 
 	//private void CalcTiles()

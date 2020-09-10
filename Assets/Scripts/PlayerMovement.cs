@@ -27,6 +27,13 @@ public class PlayerMovement : MonoBehaviour
 		animator.SetBool("isWalking", true);
 	}
 
+	public void Restart()
+	{
+		gamePause = false;
+		animator.SetBool("isDead", false);
+		transform.position = new Vector3(0f, 1.85f, 0f);
+	}
+
 	// Update is called once per frame
 	private void Update()
     {
@@ -136,6 +143,7 @@ public class PlayerMovement : MonoBehaviour
 	{
 		MovementTiles.speed = 0f;
 		animator.SetBool("isDead", true);
+		GameManager.instance.Die();
 	}
 
 	//springe nach oben

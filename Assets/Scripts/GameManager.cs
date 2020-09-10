@@ -23,8 +23,11 @@ public class GameManager : MonoBehaviour
 	public TextMeshProUGUI textField;
 	public TextMeshProUGUI scoreField;
 	public TextMeshProUGUI nextScoreField;
-	int tilesPlaced = 0;
-	int tilesInLastLevels = 0;
+	public TextMeshProUGUI scoreDeadTextField;
+	public TextMeshProUGUI highScoreTextField;
+	float timeInLastLevel;
+	float timeSinceStartTheGame = 0f;
+	float scoreNow;
 
 	private void Start()
 	{
@@ -38,17 +41,36 @@ public class GameManager : MonoBehaviour
 		levelNow = allLevels[0];
 		MovementTiles.speed = playerSpeed;
 		textField.text = levelNow.name;
-		nextScoreField.text = levelNow.maxLevelScore.ToString();
+		nextScoreField.text = levelNow.levelTime.ToString();
 		levelTiles.Inizialize();
+	}
+
+	private void InternalRestart()
+	{
+		levelIndexNow = 0;
+		playerSpeed = 3f;
+		LevelTiles levelTiles = GetComponent<LevelTiles>();
+		levelTiles.allTiles = new List<GameObject[]>();
+		for (int i = 0; i < allLevels.Length; i++)
+		{
+			levelTiles.allTiles.Add(allLevels[i].spawnableTiles);
+		}
+		instance = this;
+		levelNow = allLevels[0];
+		MovementTiles.speed = playerSpeed;
+		textField.text = levelNow.name;
+		nextScoreField.text = levelNow.levelTime.ToString();
+		levelTiles.Inizialize();
+		timeInLastLevel = 0f;
+		timeSinceStartTheGame = Time.time;
 	}
 
 	private void Update()
 	{
-		 float tilesPLacedSinceLastLevel = tilesPlaced - tilesInLastLevels;
-		float maxScoreSinceLastLevel = levelNow.maxLevelScore - tilesInLastLevels;
-		//Debug.Log((tilesPlaced - tilesInLastLevels) / (levelNow.maxLevelScore - tilesInLastLevels));
-		scrollbar.size = tilesPLacedSinceLastLevel / maxScoreSinceLastLevel;
-		if(tilesPlaced == levelNow.maxLevelScore)
+		scoreNow = Time.time - timeSinceStartTheGame;
+		scoreField.text = (int)(scoreNow) + "/";
+		scrollbar.size = (scoreNow - timeInLastLevel) / (levelNow.levelTime - timeInLastLevel);
+		if(scoreNow >= levelNow.levelTime)
 		{
 			NextLevel();
 		}
@@ -56,17 +78,49 @@ public class GameManager : MonoBehaviour
 
 	void NextLevel()
 	{
-		tilesInLastLevels = tilesPlaced;
 		levelIndexNow++;
 		levelNow = allLevels[levelIndexNow];
 		textField.text = levelNow.name;
 		LevelTiles.instance.NewLevel();
-		nextScoreField.text = levelNow.maxLevelScore.ToString();
+		nextScoreField.text = levelNow.levelTime.ToString();
+		timeInLastLevel = Time.time;
 	}
 
-	public void NextTilePlaced()
+	public void Restart()
 	{
-		tilesPlaced++;
-		scoreField.text = tilesPlaced + "/";
+		InternalRestart();
+		LevelGenerator.instance.Restart();
+		UIManager.instance.Restart();
+		UIManager.instance.player.Restart();
 	}
+
+	public void Die()
+	{
+		scoreDeadTextField.text = ((int)scoreNow).ToString();
+		int highScore = 0;
+		Debug.Log(PlayerPrefs.HasKey("HighScore"));
+		if (PlayerPrefs.HasKey("HighScore"))
+			highScore = PlayerPrefs.GetInt("HighScore");
+		else
+		{
+			highScore = (int)scoreNow;
+		}
+		if (highScore >= scoreNow)
+		{
+			PlayerPrefs.SetInt("HighScore", highScore);
+			PlayerPrefs.Save();
+		}
+
+		Debug.Log(highScore);
+		highScoreTextField.text = highScore.ToString();
+		UIManager.instance.Die();
+	}
+
+	//public void NextTilePlaced(float width, GameObject nextTilePlace)
+	//{
+	//	nextTile = nextTilePlace.transform;
+	//	widthNextTile = width;
+	//	tilesPlaced++;
+	//	scoreField.text = tilesPlaced + "/";
+	//}
 }

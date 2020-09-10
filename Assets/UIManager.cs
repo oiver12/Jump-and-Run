@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
 	public static UIManager instance;
 
 	public GameObject inGameUI;
+	public GameObject dieMenu;
 	public GameObject pauseMenu;
 	public PlayerMovement player;
 
@@ -17,7 +18,15 @@ public class UIManager : MonoBehaviour
 		instance = this;
 		inGameUI.SetActive(true);
 		pauseMenu.SetActive(false);
+		dieMenu.SetActive(false);
     }
+
+	public void Restart()
+	{
+		inGameUI.SetActive(true);
+		pauseMenu.SetActive(false);
+		dieMenu.SetActive(false);
+	}
 
 	public void PauseGame()
 	{
@@ -33,5 +42,13 @@ public class UIManager : MonoBehaviour
 		inGameUI.SetActive(true);
 		pauseMenu.SetActive(false);
 		MovementTiles.speed = 3f;
+	}
+
+	public void Die()
+	{
+		inGameUI.SetActive(false);
+		pauseMenu.SetActive(false);
+		dieMenu.SetActive(true);
+		player.gamePause = true;
 	}
 }

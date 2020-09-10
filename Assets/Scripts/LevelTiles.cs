@@ -19,8 +19,10 @@ public class LevelTiles : MonoBehaviour
 
 	public void Inizialize()
 	{
+		Restart();
 		instance = this;
 		parentActiveObject = new GameObject("ActiveObject").transform;
+		levelNow = -1;
 		NewLevel();
 	}
 
@@ -74,5 +76,13 @@ public class LevelTiles : MonoBehaviour
 		{
 			parentActiveObject.GetChild(i).name = "-1";
 		}
+	}
+
+	public void Restart()
+	{
+		if (parentActiveObject != null)
+			Destroy(parentActiveObject.gameObject);
+		if (parentInactiveObject != null)
+			Destroy(parentInactiveObject.gameObject);
 	}
 }

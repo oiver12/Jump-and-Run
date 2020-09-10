@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelName: Sekundar
   levelIndex: 1
-  maxLevelScore: 30
+  levelTime: 30
   spawnableTiles:
   - {fileID: 1332964324738484687, guid: 54ee3ec464133204a8f6d3af1954d99e, type: 3}
   - {fileID: 1332964324738484687, guid: be7cfd8ed1a61f245b084f1b9956b15d, type: 3}

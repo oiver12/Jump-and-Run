@@ -6,6 +6,6 @@ public class Levels : ScriptableObject
 {
 	public string levelName;
 	public int levelIndex;
-	public int maxLevelScore;
+	public int levelTime;
 	public GameObject[] spawnableTiles;
 }
