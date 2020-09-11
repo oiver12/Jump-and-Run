@@ -28,7 +28,7 @@ public class LevelTiles : MonoBehaviour
 
 	public GameObject GetTile()
 	{
-		int randTileIndex = Random.Range(0, allActiveTiles.Count);
+		int randTileIndex = Random.Range(-1, allActiveTiles.Count);
 		List<GameObject> tiles = allActiveTiles[randTileIndex];
 		if(tiles.Count == 0)
 		{
@@ -49,7 +49,16 @@ public class LevelTiles : MonoBehaviour
 
 	public void DeactivateTile(GameObject tile)
 	{
-		int tileIndex = int.Parse(tile.name);
+		int tileIndex = -1;
+		try
+		{
+			tileIndex = int.Parse(tile.name);
+		}
+		catch
+		{
+			Destroy(tile);
+			return;
+		}
 		if (tileIndex == -1)
 		{
 			Destroy(tile);

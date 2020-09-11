@@ -18,3 +18,4 @@ MonoBehaviour:
   spawnableTiles:
   - {fileID: 6670199770361699140, guid: 54ce7d9a119b31646be80c9a258c225f, type: 3}
   - {fileID: 6670199770361699140, guid: 95ba4ee134c093a4a8c7601e59593e75, type: 3}
+  - {fileID: 6670199770361699140, guid: 62406511c20b6e248b57c1252d2c5815, type: 3}

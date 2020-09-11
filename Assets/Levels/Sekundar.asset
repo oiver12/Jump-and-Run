@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81a0669a621cbf74697ec4c23fc89839, type: 3}
   m_Name: Sekundar
   m_EditorClassIdentifier: 
-  levelName: Sekundar
+  levelName: Sekundarschule
   levelIndex: 1
   levelTime: 30
   spawnableTiles:

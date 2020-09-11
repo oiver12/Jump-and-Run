@@ -15,4 +15,6 @@ MonoBehaviour:
   levelName: Gymnasium
   levelIndex: 2
   levelTime: 45
-  spawnableTiles: []
+  spawnableTiles:
+  - {fileID: 1332964324738484687, guid: 2d7f3380b07f9c34eb178af69d3c095e, type: 3}
+  - {fileID: 1332964324738484687, guid: e1c14ce0418973e47bf8788063531912, type: 3}

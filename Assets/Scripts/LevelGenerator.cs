@@ -20,8 +20,9 @@ public class LevelGenerator : MonoBehaviour
 	//List<GameObject> notVisibelTilesInScene = new List<GameObject>();
 	//alle Tiles welche gerade sichtbar 
 	List<GameObject> activeTiles = new List<GameObject>();
+	public GameObject startTile;
 	Vector2 endPos;
-	public float xSpawnPosition = -20f;
+	public float xSpawnPosition = 10f;
 
 	private void Start()
 	{
@@ -40,7 +41,7 @@ public class LevelGenerator : MonoBehaviour
 		//setzte das erste Teil auf 0, 0
 		endPos = Vector2.zero;
 		//setzte ein Teil
-		SpawnTile();
+		SpawnStartTile();
 
 		//float width = platformPrefab[0].GetComponent<SpriteRenderer>().bounds.size.x;
 		//Debug.Log(width);
@@ -61,10 +62,10 @@ public class LevelGenerator : MonoBehaviour
 
 	private void Update()
 	{
-		if(activeTiles[0].transform.position.x <= xSpawnPosition)
+		if(activeTiles[0].transform.position.x <= -40f)
 			DestroyLastObject();
 
-		if (activeTiles[activeTiles.Count - 1].transform.position.x <= 10f)
+		if (activeTiles[activeTiles.Count - 1].transform.position.x <= 40f)
 			SpawnTile();
 	}
 
@@ -89,15 +90,28 @@ public class LevelGenerator : MonoBehaviour
 		if (activeTiles.Count > 0)
 		{
 			endPos = activeTiles[activeTiles.Count - 1].transform.GetChild(1).position; //endPositionObject
-			//width = activeTiles[activeTiles.Count - 1].transform.GetChild(1).position.x - activeTiles[activeTiles.Count - 1].transform.GetChild(0).position.x;
+																						//width = activeTiles[activeTiles.Count - 1].transform.GetChild(1).position.x - activeTiles[activeTiles.Count - 1].transform.GetChild(0).position.x;
 			width = spawnedGameObject.transform.GetChild(1).position.x - spawnedGameObject.transform.GetChild(0).position.x;
 		}
 		else
+		{
+			Debug.Log("Spawn here");
 			width = spawnedGameObject.GetComponent<SpriteRenderer>().bounds.size.x;
+		}
 
 		spawnedGameObject.transform.position = new Vector2(endPos.x + (width / 2), endPos.y);
 		activeTiles.Add(spawnedGameObject);
 		//GameManager.instance.NextTilePlaced(width, spawnedGameObject);
+	}
+
+	public void SpawnStartTile()
+	{
+		GameObject spawnedGameObject = startTile;
+		spawnedGameObject.SetActive(true);
+		float width = spawnedGameObject.transform.GetChild(1).position.x - spawnedGameObject.transform.GetChild(0).position.x;
+		spawnedGameObject.transform.position = new Vector2(endPos.x + (width / 2), endPos.y);
+		activeTiles.Add(spawnedGameObject);
+		SpawnTile();
 	}
 
 	//private void CalcTiles()
