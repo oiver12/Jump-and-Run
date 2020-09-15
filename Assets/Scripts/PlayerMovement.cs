@@ -5,15 +5,17 @@ using UnityEngine.EventSystems;
 //regeln des Player Movements 
 public class PlayerMovement : MonoBehaviour
 {
+	public bool gamePause = false;
 	public float angleThreshold = 40f;
 	public float jumpForce;
 	public float fallMultiplier = 2.5f;
 	public float lowJumpMultiplier = 2f;
-	public bool gamePause = false;
+	public float timeToDieAfterLastGroundContact = 10f;
 
 	//wie viel mal sind wir gesprungen
 	int jumpCounter = 0;
 	bool isgrounded;
+	float lastGroundContact;
 	BoxCollider2D boxCollider2D;
 	Rigidbody2D rig;
 	Animator animator;
@@ -25,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
 		boxCollider2D = GetComponent<BoxCollider2D>();
 		animator = transform.GetChild(0).GetComponent<Animator>();
 		animator.SetBool("isWalking", true);
+		lastGroundContact = Time.time;
 	}
 
 	public void Restart()
@@ -40,6 +43,10 @@ public class PlayerMovement : MonoBehaviour
 		if (gamePause)
 			return;
 
+		//wennn timeToDieAfterLastGroundContact der Boden nicht brührt wurde --> sterben
+		if (Time.time - lastGroundContact >= timeToDieAfterLastGroundContact)
+			Dead();
+
 		bool wasgrounded = isgrounded;
 		isgrounded = getIsGrounded();
 		//wenn man im letzten Frame nicht am Boden war, aber jetzt schon, ist man jetzt gerade gelandet
@@ -48,12 +55,15 @@ public class PlayerMovement : MonoBehaviour
 			if (isgrounded)
 				jumpCounter = 0;
 
-			if(!isgrounded)
+			if (!isgrounded)
+			{
 				animator.SetBool("isJumping", false);
+				if (jumpCounter == 0)
+					jumpCounter = 1;
+			}
 
 			animator.SetBool("isGrounded", isgrounded);
 		}
-		Debug.Log(jumpCounter);
 		if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
 		{
 			if (isgrounded)
@@ -94,6 +104,7 @@ public class PlayerMovement : MonoBehaviour
 			//weniger schnell nach oben
 			rig.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
 
+		//Screentshot in editor
 		if (Input.GetKey(KeyCode.A) && Input.GetKeyDown(KeyCode.F))
 		{
 			ScreenCapture.CaptureScreenshot(Application.dataPath + "/Screenshoot.png");
@@ -138,6 +149,7 @@ public class PlayerMovement : MonoBehaviour
 		//ist der Boden --> layer 8
 		if(collision.gameObject.layer == 8)
 		{
+			lastGroundContact = Time.time;
 			//Debug.Log(Vector2.Angle((Vector2)transform.position - collision.contacts[0].point, Vector2.up));
 			//wenn wir von der Seite kommen, sterben wir
 			if (Mathf.Abs(Vector2.Angle((Vector2)transform.position - collision.contacts[0].point, Vector2.up)) > angleThreshold)
@@ -161,8 +173,14 @@ public class PlayerMovement : MonoBehaviour
 		//jumpTimer plus 1, um nur zwei mal zu springen
 		jumpCounter++;
 		//rig.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
-		//die geschwindigkeit des Characters nach oben setzten
+		//die geschwindigkeit des Characters nach oben setzen
 		rig.velocity = new Vector2(0f, jumpForce);
 	}
+
+	//public void NextYValueTile(float yValue)
+	//{
+	//	if(yValue <= lowestYValue)
+	//		lowestYValue = yValue
+	//}
 }
 

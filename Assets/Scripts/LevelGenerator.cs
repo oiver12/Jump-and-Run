@@ -95,12 +95,12 @@ public class LevelGenerator : MonoBehaviour
 		}
 		else
 		{
-			Debug.Log("Spawn here");
 			width = spawnedGameObject.GetComponent<SpriteRenderer>().bounds.size.x;
 		}
 
 		spawnedGameObject.transform.position = new Vector2(endPos.x + (width / 2), endPos.y);
 		activeTiles.Add(spawnedGameObject);
+		//UIManager.instance.player.NextYValueTile(spawnedGameObject.transform.position.y);
 		//GameManager.instance.NextTilePlaced(width, spawnedGameObject);
 	}
 

@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
 		timeInLastLevel = 0f;
 		timeSinceStartTheGame = Time.time;
 		noteTextField.text = alleNoten[noteNow];
-		StartCoroutine(reduceTtroopDamageOvertime());
+		//StartCoroutine(reduceTtroopDamageOvertime());
 		noteTextField.text = alleNoten[noteNow];
 	}
 
@@ -91,6 +91,9 @@ public class GameManager : MonoBehaviour
 	{
 		noteNow = alleNoten.Length - 1;
 		levelIndexNow++;
+		if (levelIndexNow >= alleNoten.Length)
+			levelIndexNow--;
+
 		levelNow = allLevels[levelIndexNow];
 		textField.text = levelNow.levelName;
 		LevelTiles.instance.NewLevel();
