@@ -1,0 +1,309 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5772936827606087612
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5772936827606087239}
+  - component: {fileID: 5772936827606087236}
+  - component: {fileID: 5772936827606087237}
+  - component: {fileID: 5772936827606087234}
+  - component: {fileID: 5772936827606087235}
+  - component: {fileID: 5772936827606087232}
+  - component: {fileID: 5772936827606087233}
+  - component: {fileID: 5772936827606087614}
+  - component: {fileID: 5772936827606087615}
+  m_Layer: 0
+  m_Name: Levelgenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5772936827606087239
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5772936827606087612}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5772936827606087236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5772936827606087612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d61285a38de9a0b4698a0c09577c4059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Bounds:
+    m_Center: {x: 6.5, y: 3.7284663, z: -0.4950974}
+    m_Extent: {x: 6.5, y: 4.851886, z: 0.5049026}
+  Center: {x: 6.5, y: 3.7284663, z: -0.4950974}
+  ParentName: Level
+  InfiniteGeneration: 0
+  TwoDimensional: 1
+  MinX: 0
+  MaxX: 13
+  MinY: -1.1234195
+  MaxY: 8.580352
+  CellCount: 1
+--- !u!114 &5772936827606087237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5772936827606087612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efc742bc6b0cf9247bd49c7ad1aa3117, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ParentGameobjectName: Level
+  TwoDimensional: 1
+--- !u!114 &5772936827606087234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5772936827606087612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65783d7c2ad87604388f4da221e9e393, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AssetCountList:
+  - Key: 0
+    Value:
+    - Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0.5
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 0.5
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      Key: <obstacles>
+      TargetObjectCount: 0
+      Value: <obstacles/one_big_pipe_medium>|<obstacles/one_big_pipe_short>|<obstacles/one_big_pipe_tall>|<obstacles/three_medium_pipes_medium>|<obstacles/two_small_pipes_medium>
+  - Key: 5
+    Value:
+    - Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0.5
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 0.5
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      Key: <obstacles>
+      TargetObjectCount: 0
+      Value: <obstacles/one_big_pipe_medium>|<obstacles/one_big_pipe_short>|<obstacles/one_big_pipe_tall>|<obstacles/three_medium_pipes_medium>|<obstacles/two_small_pipes_medium>
+  SectionStringList:
+  - Key: 0
+    Value: <short-section>
+  GenerateNegativeDirection: 0
+  GeneratePositiveDirection: 1
+  GetBackToStart: 1
+  Infinite: 1
+  IsVertical: 0
+  MinimumClearance: 6
+  Player: {fileID: 0}
+  ActiveSections: 2
+  StartSeed: -1
+  StartValue: 0
+--- !u!114 &5772936827606087235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5772936827606087612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fa64ca56ce39e546a0466cfab43e566, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CodonNumbers: -1 -1 -1 -1 -1 -1
+  InputList:
+  - Difficulty: 0
+    IsCell: 1
+    IsFinalString: 0
+    IsManuallyMapped: 0
+    IsMapped: 0
+    KeyString: <short-section>
+    ValueString: <patterns/short/basic>
+  - Difficulty: 50
+    IsCell: 0
+    IsFinalString: 1
+    IsManuallyMapped: 0
+    IsMapped: 1
+    KeyString: <patterns/short/basic>
+    ValueString: <patterns/short/basic/basic_pattern_10>|<patterns/short/basic/basic_pattern_11>|<patterns/short/basic/basic_pattern_12>|<patterns/short/basic/basic_pattern_7>|<patterns/short/basic/basic_pattern_8>|<patterns/short/basic/basic_pattern_9>|<patterns/short/basic/ground_1>
+  StartSeed: -1
+  StartString: <short-section>
+--- !u!114 &5772936827606087232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5772936827606087612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35f541d61ff14d441bc7b318df8bfeb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _generationDuration: 0 ms
+  _usedCodonNumbersString: 
+  logEvolution: 0
+  logEvolutionToFile: 0
+  StringList: []
+--- !u!114 &5772936827606087233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5772936827606087612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e197f93e8c8c23e4680cbdf1a4ad665c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GeneratedLevel:
+  - <3-way-cell-group>
+  - <patterns/short/basic/ground_1>
+  - <patterns/short/basic/basic_pattern_9>
+  - <patterns/short/basic/basic_pattern_7>
+  LevelGenerationDuration: 0 ms
+  UsedGenomes: 93 90 61 45
+  ParentPosition: {x: 0, y: 0, z: 0}
+  LayerName: 
+  AnimateCells: 0
+  AnimationOffset: 0
+  GroundCells: 0
+  ExcludeTag: 
+  AnimationDuration: 0
+  VerticalConstruction: 0
+  MinMaxVertical: {x: 1, y: 2}
+  MinMaxHorizontal: {x: 1, y: 2}
+--- !u!114 &5772936827606087614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5772936827606087612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6543ce9f2ffd7c4468868b0c74e4786a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GrammarItems:
+  - Curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0.5
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: 0.5
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    Key: <obstacles>
+    TargetObjectCount: 3
+    Value: <obstacles/one_big_pipe_medium>|<obstacles/one_big_pipe_short>|<obstacles/one_big_pipe_tall>|<obstacles/three_medium_pipes_medium>|<obstacles/two_small_pipes_medium>
+  PatternList:
+  - Difficulty: 94
+    IsCell: 0
+    IsFinalString: 0
+    IsManuallyMapped: 1
+    IsMapped: 0
+    KeyString: <patterns/short/basic>
+    ValueString: <patterns/short/basic/basic_pattern_10>|<patterns/short/basic/basic_pattern_11>|<patterns/short/basic/basic_pattern_12>|<patterns/short/basic/basic_pattern_7>|<patterns/short/basic/basic_pattern_8>|<patterns/short/basic/basic_pattern_9>|<patterns/short/basic/ground_1>
+  - Difficulty: 96
+    IsCell: 0
+    IsFinalString: 0
+    IsManuallyMapped: 0
+    IsMapped: 1
+    KeyString: <patterns/tall/basic>
+    ValueString: <patterns/tall/basic/basic_pattern_1>|<patterns/tall/basic/basic_pattern_13>|<patterns/tall/basic/basic_pattern_14>|<patterns/tall/basic/basic_pattern_15>|<patterns/tall/basic/basic_pattern_16>|<patterns/tall/basic/basic_pattern_17>|<patterns/tall/basic/basic_pattern_18>|<patterns/tall/basic/basic_pattern_2>|<patterns/tall/basic/basic_pattern_3>|<patterns/tall/basic/basic_pattern_4>|<patterns/tall/basic/basic_pattern_5>|<patterns/tall/basic/basic_pattern_6>|<patterns/tall/basic/ground_0>
+  PopulateLevel: 1
+  ShowStats: 1
+  ExcludeLayer: 
+--- !u!114 &5772936827606087615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5772936827606087612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49b9a714149e54f42a1feef60e8ebbb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LogGeneration: 0

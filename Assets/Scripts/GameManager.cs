@@ -105,7 +105,7 @@ public class GameManager : MonoBehaviour
 	public void Restart()
 	{
 		InternalRestart();
-		LevelGenerator.instance.Restart();
+		LevelSpawner.instance.Restart();
 		UIManager.instance.Restart();
 		UIManager.instance.player.Restart();
 	}
