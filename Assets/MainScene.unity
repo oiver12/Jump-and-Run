@@ -653,7 +653,17 @@ PrefabInstance:
         type: 3}
       propertyPath: Player
       value: 
-      objectReference: {fileID: 766481140}
+      objectReference: {fileID: 1073023602}
+    - target: {fileID: 5772936827606087234, guid: 2e89f961463a05e43b78bdfa95b8ca6a,
+        type: 3}
+      propertyPath: levelSpawner
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5772936827606087236, guid: 2e89f961463a05e43b78bdfa95b8ca6a,
+        type: 3}
+      propertyPath: Bounds.m_Center.x
+      value: 6.5
+      objectReference: {fileID: 0}
     - target: {fileID: 5772936827606087239, guid: 2e89f961463a05e43b78bdfa95b8ca6a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -844,18 +854,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &770249673 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5772936827606087234, guid: 2e89f961463a05e43b78bdfa95b8ca6a,
-    type: 3}
-  m_PrefabInstance: {fileID: 395537754}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65783d7c2ad87604388f4da221e9e393, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &786709259
 GameObject:
   m_ObjectHideFlags: 0
@@ -1540,7 +1538,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1190262919}
   - component: {fileID: 1190262918}
-  - component: {fileID: 1190262920}
   - component: {fileID: 1190262921}
   - component: {fileID: 1190262922}
   m_Layer: 0
@@ -1605,21 +1602,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1190262920
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1190262917}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da717cd3366acf14d8ca39b7331fb7f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  infiniteLevelGenerator: {fileID: 770249673}
-  startTile: {fileID: 1321427124}
-  xSpawnPosition: -20
 --- !u!114 &1190262921
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1854,12 +1836,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1258468583}
   m_CullTransparentMesh: 0
---- !u!1 &1321427124 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1332964324738484687, guid: 763acf8c1881b2f4b9ca671edcbab106,
-    type: 3}
-  m_PrefabInstance: {fileID: 1050452990}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1333142201
 GameObject:
   m_ObjectHideFlags: 0

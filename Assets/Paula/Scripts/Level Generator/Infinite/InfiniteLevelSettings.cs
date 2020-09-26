@@ -13,6 +13,13 @@ using UnityEditor;
 #endif
 using UnityEngine;
 
+public class SectionObject
+{
+	public GameObject section;
+	public Vector3 sizeSection;
+	public Vector3 offsetCenter;
+}
+
 namespace Assets.Scripts.Level_Generator.Infinite
 {
     public enum Direction
@@ -37,7 +44,7 @@ namespace Assets.Scripts.Level_Generator.Infinite
         public int ActiveSections = 2;
         public int StartSeed;
         public int StartValue;
-		public LevelSpawner levelSpawner;
+		public Bounds cameraBounds;
 
         private StringReplacerHolder _stringReplacerHolder;
         private LevelInstantiater _levelInstantiater;
@@ -47,7 +54,7 @@ namespace Assets.Scripts.Level_Generator.Infinite
         private List<string> _startStringList = new List<string>();
         private List<KeyValueCurveGroup> _grammarItems = new List<KeyValueCurveGroup>();
         private readonly List<int> _modifiedObjects = new List<int>();
-        private readonly List<GameObject> _sections = new List<GameObject>();
+        private readonly List<SectionObject> _sections = new List<SectionObject>();
         private readonly SortedList<int, List<KeyValueCurveGroup>> _sortedAssetGrammarItemList = new SortedList<int, List<KeyValueCurveGroup>>();
         private readonly SortedList<int, string> _sortedSectionList = new SortedList<int, string>();
         private Bounds _levelBounds;
@@ -70,7 +77,7 @@ namespace Assets.Scripts.Level_Generator.Infinite
         {
             if (Application.isPlaying && Infinite)
             {
-                GenerateNewSection(true);
+                GenerateNewSection(true, 0f);
             }
         }
 
@@ -108,7 +115,14 @@ namespace Assets.Scripts.Level_Generator.Infinite
             _stringParser = gameObject.GetComponent<StringParser>();
             _levelInstantiater = gameObject.GetComponent<LevelInstantiater>();
             _levelPopulator = gameObject.GetComponent<LevelPopulator>();
-        }
+
+			Camera camera = Camera.main;
+			float screenAspect = (float)Screen.width / (float)Screen.height;
+			float cameraHeight = camera.orthographicSize * 2;
+			cameraBounds = new Bounds(
+				camera.transform.position,
+				new Vector3(cameraHeight * screenAspect, cameraHeight, 0));
+		}
 
         public List<string> SetSectionStartString(bool insertAhead, int sectionNumber)
         {
@@ -181,7 +195,7 @@ namespace Assets.Scripts.Level_Generator.Infinite
             return list ?? _grammarItems;
         }
 
-        public void GenerateNewSection(bool rightOrUp)
+        public void GenerateNewSection(bool rightOrUp, float positionX)
         {
             var insertAhead = SetGenerationDirections(rightOrUp);
             _startStringList = SetSectionStartString(insertAhead, _sectionNumber);
@@ -190,7 +204,6 @@ namespace Assets.Scripts.Level_Generator.Infinite
             var sectionObj = new GameObject("section" + _sectionNumber);
             sectionObj.transform.parent = _levelGameObject.transform;
 
-            Add(insertAhead, sectionObj);
 
             _stringReplacerHolder.Setup(new LevelTokenReplacer(), _xxHash, _sectionNumber,
                 _stringParser.GenerateTokenDictionary(_stringParser.InputList), _startStringList,
@@ -221,8 +234,9 @@ namespace Assets.Scripts.Level_Generator.Infinite
                 }
                 else
                 {
-                    sectionObj.transform.position =
-                        new Vector3(Mathf.Round(_levelBounds.max.x + _levelInstantiater.MinMaxHorizontal.x), 0, 0);
+					//sectionObj.transform.position =
+					//    new Vector3(Mathf.Round(_levelBounds.max.x + _levelInstantiater.MinMaxHorizontal.x), 0, 0);
+					sectionObj.transform.position = new Vector3(positionX, 0f, 0f);
                 }
             }
             else
@@ -243,71 +257,7 @@ namespace Assets.Scripts.Level_Generator.Infinite
             }
 
             _levelBounds = GameObjectHelper.CalculateGlobalBoundsOfChildren(_levelGameObject);
-        }
-
-		public GameObject GenerateNewSectionWithReturn(bool rightOrUp)
-		{
-			var insertAhead = SetGenerationDirections(rightOrUp);
-			_startStringList = SetSectionStartString(insertAhead, _sectionNumber);
-			_grammarItems = SetSectionAssetList(insertAhead, _sectionNumber);
-
-			var sectionObj = new GameObject("section" + _sectionNumber);
-			sectionObj.transform.parent = _levelGameObject.transform;
-
 			Add(insertAhead, sectionObj);
-
-			_stringReplacerHolder.Setup(new LevelTokenReplacer(), _xxHash, _sectionNumber,
-				_stringParser.GenerateTokenDictionary(_stringParser.InputList), _startStringList,
-				_stringParser.GetCodonList());
-			_stringReplacerHolder.StartTextReplacing();
-			var levelString = _stringReplacerHolder.GetGeneratedLevel();
-			_levelInstantiater.Setup(levelString, sectionObj, _stringReplacerHolder._generationDuration, _stringReplacerHolder._usedCodonNumbersString);
-			if (_levelPopulator.PopulateLevel)
-			{
-				_levelPopulator.StartPopulation(_xxHash, true, _grammarItems, sectionObj, _sectionNumber, _modifiedObjects);
-			}
-			else
-			{
-				_levelInstantiater.SetupLevelObjects();
-			}
-
-			if (rightOrUp)
-			{
-				if (IsVertical)
-				{
-					if (_sectionNumber > StartValue)
-					{
-						var bounds = GameObjectHelper.CalculateBoundsWithChildren(sectionObj, "pcgplatform");
-
-						var yOffset = sectionObj.transform.position.y + (bounds.min.y + sectionObj.transform.position.y);
-						sectionObj.transform.position = new Vector3(0, _levelBounds.max.y + _levelInstantiater.MinMaxVertical.x - yOffset, 0);
-					}
-				}
-				else
-				{
-					sectionObj.transform.position =
-						new Vector3(Mathf.Round(_levelBounds.max.x + _levelInstantiater.MinMaxHorizontal.x), 0, 0);
-				}
-			}
-			else
-			{
-				if (IsVertical)
-				{
-					var bounds = GameObjectHelper.CalculateBoundsWithChildren(sectionObj, "pcgplatform");
-
-					var yOffset = sectionObj.transform.position.y - (bounds.max.y - sectionObj.transform.position.y);
-
-					sectionObj.transform.position = new Vector3(0, _levelBounds.min.y - _levelInstantiater.MinMaxVertical.x + yOffset, 0);
-				}
-				else
-				{
-					sectionObj.transform.position =
-						new Vector3(_levelBounds.min.x - (GameObjectHelper.CalculateBoundsWithChildren(sectionObj).size.x + _levelInstantiater.MinMaxHorizontal.x), 0, 0);
-				}
-			}
-
-			_levelBounds = GameObjectHelper.CalculateGlobalBoundsOfChildren(_levelGameObject);
-			return sectionObj;
 		}
 
 		private bool SetGenerationDirections(bool rightOrUp)
@@ -344,144 +294,179 @@ namespace Assets.Scripts.Level_Generator.Infinite
 
         public void Add(bool insertAhead, GameObject item)
         {
+			Bounds sectionBounds = GameObjectHelper.CalculateGlobalBoundsOfChildren(item);
+			SectionObject sectionObject = new SectionObject()
+			{
+				section = item,
+				sizeSection = sectionBounds.size,
+				offsetCenter = sectionBounds.center - item.transform.position,
+			};
             if (insertAhead)
             {
-                _sections.Insert(0, item);
+                _sections.Insert(0, sectionObject);
             }
             else
             {
-                _sections.Add(item);
+                _sections.Add(sectionObject);
             }
         }
 
         public void InsertAt(int index, GameObject item)
         {
-            _sections.Insert(index, item);
+			Bounds sectionBounds = GameObjectHelper.CalculateGlobalBoundsOfChildren(item);
+			SectionObject sectionObject = new SectionObject()
+			{
+				section = item,
+				sizeSection = sectionBounds.size,
+				offsetCenter = sectionBounds.center - item.transform.position,
+			};
+			_sections.Insert(index, sectionObject);
         }
 
-        // Update is called once per frame
         private void Update()
         {
             if (!Infinite) return;
 
-            if (_updateBounds)
-            {
-                _levelBounds = GameObjectHelper.CalculateGlobalBoundsOfChildren(_levelGameObject);
-                _updateBounds = false;
-            }
-
-            if (GeneratePositiveDirection || (GetBackToStart && _sectionNumber < 0 && _sectionNumber != 0))
-            {
-                if (IsVertical)
-                {
-                    if (Player.transform.position.y > _levelBounds.max.y - MinimumClearance)
-                    {
-                        GenerateNewSection(true);
-                        _lastMovementDirection = Direction.Up;
-
-                        if (_sections.Count > ActiveSections)
-                        {
-                            var elem = _sections[0];
-                            var serializers = elem.GetComponentsInChildren<InfiniteLevelObjectSerializer>();
-                            foreach (var serializer in serializers)
-                            {
-                                serializer.SectionRemoved = true;
-                            }
-                            Destroy(elem);
-                            _sections.RemoveAt(0);
-                            _updateBounds = true;
-                        }
-                    }
-                }
-                else
-                {
-                    if (Player.transform.position.x > _levelBounds.max.x - MinimumClearance)
-                    {
-                        GenerateNewSection(true);
-                        _lastMovementDirection = Direction.Right;
-
-                        if (_sections.Count > ActiveSections)
-                        {
-                            var elem = _sections[0];
-                            var serializers = elem.GetComponentsInChildren<InfiniteLevelObjectSerializer>();
-                            foreach (var serializer in serializers)
-                            {
-                                serializer.SectionRemoved = true;
-                            }
-                            Destroy(elem);
-                            _sections.RemoveAt(0);
-                            _updateBounds = true;
-                        }
-                    }
-                }
-            }
-
-            if (GenerateNegativeDirection || (GetBackToStart && _sectionNumber > 0))
-            {
-                if (IsVertical)
-                {
-                    if (Player.transform.position.y < _levelBounds.min.y + MinimumClearance)
-                    {
-                        GenerateNewSection(false);
-                        _lastMovementDirection = Direction.Down;
-
-                        if (_sections.Count > ActiveSections)
-                        {
-                            var elem = _sections[ActiveSections];
-                            var serializers = elem.GetComponentsInChildren<InfiniteLevelObjectSerializer>();
-                            foreach (var serializer in serializers)
-                            {
-                                serializer.SectionRemoved = true;
-                            }
-                            Destroy(elem);
-                            _sections.RemoveAt(ActiveSections);
-                            _updateBounds = true;
-                        }
-                    }
-                }
-                else
-                {
-                    if (Player.transform.position.x < _levelBounds.min.x + MinimumClearance)
-                    {
-                        GenerateNewSection(false);
-                        _lastMovementDirection = Direction.Left;
-
-                        if (_sections.Count > ActiveSections)
-                        {
-                            var elem = _sections[ActiveSections];
-                            var serializers = elem.GetComponentsInChildren<InfiniteLevelObjectSerializer>();
-                            foreach (var serializer in serializers)
-                            {
-                                serializer.SectionRemoved = true;
-                            }
-                            Destroy(elem);
-                            _sections.RemoveAt(ActiveSections);
-                            _updateBounds = true;
-                        }
-                    }
-                }
-            }
-        }
-
-		public GameObject SpawnSectionRight()
-		{
-			GameObject sectionObj = GenerateNewSectionWithReturn(true);
-			_lastMovementDirection = Direction.Right;
-
-			if (_sections.Count > ActiveSections)
+			//selfmade
+			for (int i = 0; i < _sections.Count; i++)
 			{
-				var elem = _sections[0];
-				var serializers = elem.GetComponentsInChildren<InfiniteLevelObjectSerializer>();
-				foreach (var serializer in serializers)
-				{
-					serializer.SectionRemoved = true;
-				}
-				levelSpawner.RemoveSection();
-				Destroy(elem);
-				_sections.RemoveAt(0);
-				_updateBounds = true;
+				_sections[i].section.transform.Translate(new Vector3(-MovementTiles.speed * Time.deltaTime, 0f, 0f));
 			}
-			return sectionObj;
+			SectionObject lastSection = _sections[_sections.Count - 1];
+			Bounds lastObject = new Bounds(lastSection.section.transform.position + lastSection.offsetCenter, lastSection.sizeSection);
+
+			if(cameraBounds.max.x + MinimumClearance > lastObject.min.x)
+			{
+				SpawnSectionRight(lastObject.max.x + 5f);
+			}
+
+			Bounds firstObject = new Bounds(_sections[0].section.transform.position + _sections[0].offsetCenter, _sections[0].sizeSection);
+
+			if (cameraBounds.min.x - MinimumClearance > firstObject.max.x)
+			{
+				DestroyFirstSeclection();
+			}
+
+			#region oldUpdateCode
+			//        if (_updateBounds)
+			//        {
+			//            _levelBounds = GameObjectHelper.CalculateGlobalBoundsOfChildren(_levelGameObject);
+			//            _updateBounds = false;
+			//        }
+
+			//        if (GeneratePositiveDirection || (GetBackToStart && _sectionNumber < 0 && _sectionNumber != 0))
+			//        {
+			//            if (IsVertical)
+			//            {
+			//                if (Player.transform.position.y > _levelBounds.max.y - MinimumClearance)
+			//                {
+			//                    GenerateNewSection(true);
+			//                    _lastMovementDirection = Direction.Up;
+
+			//                    if (_sections.Count > ActiveSections)
+			//                    {
+			//                        var elem = _sections[0];
+			//                        var serializers = elem.GetComponentsInChildren<InfiniteLevelObjectSerializer>();
+			//                        foreach (var serializer in serializers)
+			//                        {
+			//                            serializer.SectionRemoved = true;
+			//                        }
+			//                        Destroy(elem);
+			//                        _sections.RemoveAt(0);
+			//                        _updateBounds = true;
+			//                    }
+			//                }
+			//            }
+			//            else
+			//            {
+			//	Debug.Log(Player.transform.position.x + " " + _levelBounds.max.x);
+			//	if (Player.transform.position.x > _levelBounds.max.x - MinimumClearance)
+			//	{
+			//		GenerateNewSection(true);
+			//		_lastMovementDirection = Direction.Right;
+
+			//		if (_sections.Count > ActiveSections)
+			//		{
+			//			var elem = _sections[0];
+			//			var serializers = elem.GetComponentsInChildren<InfiniteLevelObjectSerializer>();
+			//			foreach (var serializer in serializers)
+			//			{
+			//				serializer.SectionRemoved = true;
+			//			}
+			//			Destroy(elem);
+			//			_sections.RemoveAt(0);
+			//			_updateBounds = true;
+			//		}
+			//	}
+			//}
+			//        }
+
+			//        if (GenerateNegativeDirection || (GetBackToStart && _sectionNumber > 0))
+			//        {
+			//            if (IsVertical)
+			//            {
+			//                if (Player.transform.position.y < _levelBounds.min.y + MinimumClearance)
+			//                {
+			//                    GenerateNewSection(false);
+			//                    _lastMovementDirection = Direction.Down;
+
+			//                    if (_sections.Count > ActiveSections)
+			//                    {
+			//                        var elem = _sections[ActiveSections];
+			//                        var serializers = elem.GetComponentsInChildren<InfiniteLevelObjectSerializer>();
+			//                        foreach (var serializer in serializers)
+			//                        {
+			//                            serializer.SectionRemoved = true;
+			//                        }
+			//                        Destroy(elem);
+			//                        _sections.RemoveAt(ActiveSections);
+			//                        _updateBounds = true;
+			//                    }
+			//                }
+			//            }
+			//            else
+			//            {
+			//                if (Player.transform.position.x < _levelBounds.min.x + MinimumClearance)
+			//                {
+			//                    GenerateNewSection(false);
+			//                    _lastMovementDirection = Direction.Left;
+
+			//                    if (_sections.Count > ActiveSections)
+			//                    {
+			//                        var elem = _sections[ActiveSections];
+			//                        var serializers = elem.GetComponentsInChildren<InfiniteLevelObjectSerializer>();
+			//                        foreach (var serializer in serializers)
+			//                        {
+			//                            serializer.SectionRemoved = true;
+			//                        }
+			//                        Destroy(elem);
+			//                        _sections.RemoveAt(ActiveSections);
+			//                        _updateBounds = true;
+			//                    }
+			//                }
+			//            }
+			//        }
+			#endregion
+		}
+
+		public void DestroyFirstSeclection()
+		{
+			var elem = _sections[0].section;
+			var serializers = elem.GetComponentsInChildren<InfiniteLevelObjectSerializer>();
+			foreach (var serializer in serializers)
+			{
+				serializer.SectionRemoved = true;
+			}
+			//levelSpawner.RemoveSection();
+			Destroy(elem);
+			_sections.RemoveAt(0);
+			_updateBounds = true;
+		}
+
+		public void SpawnSectionRight(float positionX)
+		{
+			GenerateNewSection(true, positionX);
+			_lastMovementDirection = Direction.Right;
 		}
 
         public void UpdateAssetCountPopulationLists()
@@ -513,7 +498,7 @@ namespace Assets.Scripts.Level_Generator.Infinite
             return _levelPopulator.GrammarItems.Count;
         }
 
-        public void SafeToJsonFile()
+		public void SafeToJsonFile()
         {
 #if UNITY_EDITOR
             var path = EditorUtility.SaveFilePanel("Save Infinite Generation Settings", "", "InfiniteSettings", "txt");
