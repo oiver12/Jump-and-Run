@@ -37,6 +37,7 @@ namespace Assets.Scripts.Level_Generator.Infinite
         public int ActiveSections = 2;
         public int StartSeed;
         public int StartValue;
+		public LevelSpawner levelSpawner;
 
         private StringReplacerHolder _stringReplacerHolder;
         private LevelInstantiater _levelInstantiater;
@@ -244,7 +245,72 @@ namespace Assets.Scripts.Level_Generator.Infinite
             _levelBounds = GameObjectHelper.CalculateGlobalBoundsOfChildren(_levelGameObject);
         }
 
-        private bool SetGenerationDirections(bool rightOrUp)
+		public GameObject GenerateNewSectionWithReturn(bool rightOrUp)
+		{
+			var insertAhead = SetGenerationDirections(rightOrUp);
+			_startStringList = SetSectionStartString(insertAhead, _sectionNumber);
+			_grammarItems = SetSectionAssetList(insertAhead, _sectionNumber);
+
+			var sectionObj = new GameObject("section" + _sectionNumber);
+			sectionObj.transform.parent = _levelGameObject.transform;
+
+			Add(insertAhead, sectionObj);
+
+			_stringReplacerHolder.Setup(new LevelTokenReplacer(), _xxHash, _sectionNumber,
+				_stringParser.GenerateTokenDictionary(_stringParser.InputList), _startStringList,
+				_stringParser.GetCodonList());
+			_stringReplacerHolder.StartTextReplacing();
+			var levelString = _stringReplacerHolder.GetGeneratedLevel();
+			_levelInstantiater.Setup(levelString, sectionObj, _stringReplacerHolder._generationDuration, _stringReplacerHolder._usedCodonNumbersString);
+			if (_levelPopulator.PopulateLevel)
+			{
+				_levelPopulator.StartPopulation(_xxHash, true, _grammarItems, sectionObj, _sectionNumber, _modifiedObjects);
+			}
+			else
+			{
+				_levelInstantiater.SetupLevelObjects();
+			}
+
+			if (rightOrUp)
+			{
+				if (IsVertical)
+				{
+					if (_sectionNumber > StartValue)
+					{
+						var bounds = GameObjectHelper.CalculateBoundsWithChildren(sectionObj, "pcgplatform");
+
+						var yOffset = sectionObj.transform.position.y + (bounds.min.y + sectionObj.transform.position.y);
+						sectionObj.transform.position = new Vector3(0, _levelBounds.max.y + _levelInstantiater.MinMaxVertical.x - yOffset, 0);
+					}
+				}
+				else
+				{
+					sectionObj.transform.position =
+						new Vector3(Mathf.Round(_levelBounds.max.x + _levelInstantiater.MinMaxHorizontal.x), 0, 0);
+				}
+			}
+			else
+			{
+				if (IsVertical)
+				{
+					var bounds = GameObjectHelper.CalculateBoundsWithChildren(sectionObj, "pcgplatform");
+
+					var yOffset = sectionObj.transform.position.y - (bounds.max.y - sectionObj.transform.position.y);
+
+					sectionObj.transform.position = new Vector3(0, _levelBounds.min.y - _levelInstantiater.MinMaxVertical.x + yOffset, 0);
+				}
+				else
+				{
+					sectionObj.transform.position =
+						new Vector3(_levelBounds.min.x - (GameObjectHelper.CalculateBoundsWithChildren(sectionObj).size.x + _levelInstantiater.MinMaxHorizontal.x), 0, 0);
+				}
+			}
+
+			_levelBounds = GameObjectHelper.CalculateGlobalBoundsOfChildren(_levelGameObject);
+			return sectionObj;
+		}
+
+		private bool SetGenerationDirections(bool rightOrUp)
         {
             bool insertAhead;
             if (!rightOrUp && (_lastMovementDirection == Direction.Right || _lastMovementDirection == Direction.Up))
@@ -397,9 +463,9 @@ namespace Assets.Scripts.Level_Generator.Infinite
             }
         }
 
-		public void SpawnSectionRight()
+		public GameObject SpawnSectionRight()
 		{
-			GenerateNewSection(true);
+			GameObject sectionObj = GenerateNewSectionWithReturn(true);
 			_lastMovementDirection = Direction.Right;
 
 			if (_sections.Count > ActiveSections)
@@ -410,10 +476,12 @@ namespace Assets.Scripts.Level_Generator.Infinite
 				{
 					serializer.SectionRemoved = true;
 				}
+				levelSpawner.RemoveSection();
 				Destroy(elem);
 				_sections.RemoveAt(0);
 				_updateBounds = true;
 			}
+			return sectionObj;
 		}
 
         public void UpdateAssetCountPopulationLists()

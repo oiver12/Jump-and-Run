@@ -69,9 +69,13 @@ public class LevelSpawner : MonoBehaviour
 
 		if (activeTiles[activeTiles.Count - 1].transform.position.x <= 40f)
 		{
-			infiniteLevelGenerator.SpawnSectionRight();
-			//SpawnTile();
+			SpawnTile();
 		}
+	}
+
+	public void RemoveSection()
+	{
+		Debug.Log("RemoveSection");
 	}
 
 	void DestroyLastObject()

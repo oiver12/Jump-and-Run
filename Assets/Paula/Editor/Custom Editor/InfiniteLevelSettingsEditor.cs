@@ -25,6 +25,7 @@ namespace Assets.Editor.Custom_Editor
         private SerializedProperty _player;
         private SerializedProperty _startSeed;
         private SerializedProperty _startValue;
+		private SerializedProperty _levelSpawner;
 
         private InfiniteLevelSettings _infiniteLevel;
         private ReorderableList _sectionStringList;
@@ -44,6 +45,7 @@ namespace Assets.Editor.Custom_Editor
             _player = serializedObject.FindProperty("Player");
             _startSeed = serializedObject.FindProperty("StartSeed");
             _startValue = serializedObject.FindProperty("StartValue");
+			_levelSpawner = serializedObject.FindProperty("levelSpawner");
 
             _sectionStringList = SetupSectionStringList(_infiniteLevel.SectionStringList);
             _stringParser = _infiniteLevel.gameObject.GetComponent<StringParser>();
@@ -224,6 +226,7 @@ namespace Assets.Editor.Custom_Editor
             EditorGUILayout.PropertyField(_player, new GUIContent("Player Object"));
             EditorGUILayout.PropertyField(_startSeed, new GUIContent("Start Seed"));
             EditorGUILayout.PropertyField(_startValue, new GUIContent("Start Section Number"));
+			EditorGUILayout.PropertyField(_levelSpawner, new GUIContent("Level Spawner"));
             GUILayout.EndVertical();
             GUILayout.Space(10);
             GUILayout.EndHorizontal();
